@@ -1,4 +1,4 @@
 #in the future, we might want to use a fuzzy finder so we find the discord.desktop file and then copy them into that directory, as it may change from system to system
-alias discord-update='cd ~/Downloads/Discord ; sudo cp -rf Discord /opt/discord --exclude=discord.desktop'
+alias discupdate='cd ~/Downloads/ ; tar -xvf Discord.tar.gz; sudo cp -rf Discord /opt/discord --exclude=discord.desktop'
 alias moodle-dl='cd ~/Archive/MoodleScraper/ ; moodle-dl ; cd -'
 alias yt-dla='yt-dlp --embed-thumbnail --embed-metadata -f 'ba' -q -x --audio-format mp3 --audio-quality 320k'
