@@ -1,0 +1,215 @@
+* {
+    font-family: 'SpaceMono Nerd Font', 'Font Awesome 6 Free', 'Font Awesome 6 Brands', monospace;
+    font-size: 13px;
+    border-radius: 10px;
+}
+
+window#waybar {
+    background-color: rgba(87, 82, 104, 0);
+    border-radius: 0px;
+/*     border-bottom: 3px solid rgba(100, 114, 125, 0.5); */
+/*     color: #cdd6f4; */
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+/*
+window#waybar.empty {
+    background-color: transparent;
+}
+window#waybar.solo {
+    background-color: #FFFFFF;
+}
+*/
+
+/*window#waybar.termite {
+    background-color: #3F3F3F;
+}r
+
+window#waybar.chromium {
+    background-color: #000000;
+    border: none;
+}*/
+
+button {
+    /* Use box-shadow instead of border so the text isn't offset */
+    box-shadow: inset 0 -3px transparent;
+    /* Avoid rounded borders under each button name */
+    border: none;
+    border-radius: 0;
+}
+
+/* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
+button:hover {
+    background: inherit;
+}
+
+#workspaces button {
+    padding: 0 12px;
+    border-radius: 10px;
+    background-color: #575268;
+}
+
+#workspaces button:hover {
+    color: #1e1e2e;
+    background: #cdd6f4;
+
+}
+
+#workspaces button.focused {
+    background-color: #fab387;
+}
+
+#workspaces button.urgent {
+    background-color: #eb4d4b;
+}
+
+#mode {
+    background-color: #64727D;
+    border-bottom: 3px solid #ffffff;
+}
+#window,
+#clock,
+#battery,
+#cpu,
+#memory,
+#disk,
+#temperature,
+#backlight,
+#network,
+#pulseaudio,
+#wireplumber,
+#custom-media,
+#tray,
+#mode,
+#scratchpad,
+#custom-gpu,
+#power-profiles-daemon
+/*#mpd {
+    padding: 0 10px;
+    color: #ffffff;
+}*/
+
+#window {
+    background-color: #1e1e2e;
+    padding: 0 10px;
+}
+#workspaces {
+    margin: 0 5px;
+}
+
+/* If workspaces is the leftmost module, omit left margin */
+.modules-left > widget:first-child > #workspaces {
+    margin-left: 0;
+}
+
+/* If workspaces is the rightmost module, omit right margin */
+.modules-right > widget:last-child > #workspaces {
+    margin-right: 0;
+}
+
+#clock {
+    background-color: #1e1e2e;
+    padding: 5px 10px;
+}
+
+@keyframes blink {
+    to {
+        background-color: #ffffff;
+        color: #000000;
+    }
+}
+
+label:focus {
+    background-color: #000000;
+}
+
+#memory {
+    background-color: #89dceb;
+    color: #000000;
+    padding: 0 10px;
+}
+
+#battery {
+    background-color: #eba0ac;
+    color: #000000;
+    padding: 0 10px;
+}
+
+/*#battery.charging, #battery.plugged {*/
+/*    background-color: #a6e3a1;       */
+/*}                                    */
+
+#disk {
+    background-color: #964B00;
+}
+
+#network {
+    background-color: #cba6f7;
+    color: #000000;
+    padding: 0 10px;
+}
+
+#network.disconnected {
+    background-color: #f38ba8;
+}
+
+#pulseaudio {
+    background-color: #f9e2af;
+    color: #000000;
+    padding: 0 10px;
+}
+
+#pulseaudio.muted {
+    background-color: #1e1e2e;
+    color: #cdd6f4;
+}
+
+#wireplumber {
+    background-color: #fff0f5;
+    color: #000000;
+}
+
+#wireplumber.muted {
+    background-color: #f38ba8;
+}
+
+#temperature {
+    background-color: #89b4fa;
+    color: #000000;
+    padding: 0 10px;
+}
+
+#temperature.critical {
+    background-color: #f38ba8;
+}
+
+#custom-gpu {
+    background-color: #a6e3a1;
+    color: #000000;
+    padding: 0 10px;
+}
+
+#power-profiles-daemon {
+    background-color: #f38ba8;
+    color: #000000;
+    padding: 0 10px;
+}
+
+#tray {
+    background-color: #1e1e2e;
+    padding: 0 10px;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background-color: #f38ba8;
+}

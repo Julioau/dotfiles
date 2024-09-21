@@ -1,4 +1,2 @@
-#in the future, we might want to use a fuzzy finder so we find the discord.desktop file and then copy them into that directory, as it may change from system to system
-alias discupdate='~/Archive/Customizations/dotfiles/discupdate.sh'
 alias moodle-dl='cd ~/Archive/MoodleScraper/ ; moodle-dl ; cd -'
 alias yt-dla='yt-dlp --embed-thumbnail --embed-metadata -f 'ba' -q -x --audio-format mp3 --audio-quality 320k'
