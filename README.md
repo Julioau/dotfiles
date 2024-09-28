@@ -17,4 +17,4 @@ In case you don't know what any of the links I posted are:
 |Bibata|cursor|
 |Posy's|cursor|
 
-_woo i'm done_
+Always remember to `gsettings set org.gnome.desktop.wm.preferences button-layout :`
