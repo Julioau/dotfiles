@@ -17,4 +17,4 @@ In case you don't know what any of the links I posted are:
 |Bibata|cursor|
 |Posy's|cursor|
 
-Always remember to `gsettings set org.gnome.desktop.wm.preferences button-layout :`
+I really enjoy using `gsettings set org.gnome.desktop.wm.preferences button-layout :` to remove the window action buttons on GTK apps
