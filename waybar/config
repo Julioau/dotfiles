@@ -1,4 +1,5 @@
 [{
+    "name": "bottom",
     "layer": "top", // Waybar at top layer
     "position": "top", // Waybar position (top|bottom|left|right)
     "output": "eDP-1",
@@ -8,13 +9,14 @@
     // Choose the order of the modules
     "modules-left": [
         "clock",
-        "wlr/taskbar",
+        //"wlr/taskbar",
         "hyprland/workspaces"
     ],
     "modules-center": [
         "hyprland/window"
     ],
     "modules-right": [
+        "tray",
         "pulseaudio",
         "battery",
         "power-profiles-daemon",
@@ -25,19 +27,47 @@
     ],
     // Modules configuration
     "hyprland/workspaces": {
-     "window-rewrite": {},
-        "disable-scroll": true,
-        "all-outputs": false,
-        "warp-on-scroll": false,
-        "format": "{icon}",
-        "format-icons": {
-            "urgent": "",
-            "focused": "",
-            "default": "•"
-        }
+        "all-outputs": true,
+        "format": "{windows}",
+        "format-window-separator": " ",
+        "window-rewrite-default": "",
+        "show-special": true,
+        "special-visible-only": true,
+        //"move-to-monitor": true,
+        "window-rewrite": {
+            "class<chrome.youtube.*>":       " ", // Windows whose classes are "youtube"
+            "class<google-chrome>":          "󰊯",
+            "class<chrome-music.youtube.*>": "󰐌",
+            "class<chrome-web.telegram.*>":  "",
+            "class<chrome-web.whatsapp.*>":  "",
+            "class<chrome-gemini.*>":        "🟆",
+            //"title<moodle.*>":        "💠",
+            //"title<.*github.*>":             "", 
+            "class<kitty>":                  "", 
+            "class<firefox>":                "", // Windows whose classes are "firefox"
+            "class<org.kde.kate>":           "󰅩", // Note that "class" always comes first.
+            "class<org.kde.dolphin>":        "",
+            "class<org.kde.okular>":         "󰈦",
+            "class<libreoffice-writer>":     "󰈭",
+            "class<libreoffice-impress>":    "󰈨",
+            "class<libreoffice-calc>":       "󰈜",
+            "class<wofi>":                   "",
+        },
     },
+    //"hyprland/workspaces": {
+    // "window-rewrite": {},
+    //    "disable-scroll": true,
+    //    "all-outputs": false,
+    //    "warp-on-scroll": false,
+    //    "format": "{icon}",
+    //    "format-icons": {
+    //        "urgent": "",
+    //        "focused": "",
+    //        "default": "•"
+    //    }
+    //},
     "tray": {
-        // "icon-size": 21,
+        "icon-size": 15,
         "spacing": 10
     },
     "clock": {
@@ -46,16 +76,17 @@
         // "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         // "format-alt": "{:%d/%m/%Y}"
     },
-    "wlr/taskbar": {
-        "all-outputs": false,
-        // "active-first": true,
-        "sort-by-app-id": true,
-        "on-click": "activate",
-        "on-click-middle": "close",
-    },
+    //"wlr/taskbar": {
+    //    "all-outputs": false,
+    //    // "active-first": true,
+    //    "sort-by-app-id": true,
+    //    "on-click": "activate",
+    //    "on-click-middle": "close",
+    //},
     "memory": {
         "format": "{used:0.1f} GiB",
-        "tooltip-format": "{used:0.1f} GiB RAM"
+        "tooltip": false,
+        //"tooltip-format": "{used:0.1f} GiB"
 
     },
     "temperature": {
@@ -88,32 +119,36 @@
     "power-profiles-daemon": {
         "format": "{icon}",
         "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
-        "tooltip": true,
+        "tooltip": false,
         "format-icons": {
-            "default": "",
-            "performance": "",
-            "balanced": " ",
-            "power-saver": " "
+            "default": "󰡴",
+            "performance": "󰡴",
+            "balanced": "󰡵",
+            "power-saver": "󰡳"
         }
     },
-   //"custom/gpu": {
-   //    "exec": "nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits",
-   //    "format": "{}°C {icon}",
-   //    "interval": 1,
-   //    "format-icons": ["󰢮"]
-   //},
+   "custom/gpu": {
+       "exec": "nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits",
+       "format": "{}°C {icon}",
+       "interval": 1,
+       "format-icons": ["󰢮"]
+   },
     "network": {
         // "interface": "wlp2*", // (Optional) To force the use of this interface
-        "format-wifi": "{essid} 󰤨",
+        "format-wifi": "{essid} 󰤨 ",
         "format-ethernet": "",
         "format-ethernet-tooltip": "{ipaddr}/{cidr} ",
         "tooltip-format": "{ifname} via {gwaddr} ",
         "format-linked": "{ifname} (No IP) ",
         "format-disconnected": "Disconnected ⚠",
-        "format-alt": "{ifname}: {ipaddr}/{cidr}"
+        "format-alt": "{ifname}: {ipaddr}/{cidr}",
+        "format-ifname-icons": {
+        
+        }
     },
     "pulseaudio": {
         // "scroll-step": 1, // %, can be a float
+        "reverse-scrolling": 1,
         "format": "{volume}% {icon} {format_source}",
         "format-bluetooth": "{volume}% {icon} {format_source}",
         "format-bluetooth-muted": " {icon} {format_source}",
@@ -130,24 +165,43 @@
             "default": ["", "", ""]
         },
         "on-click": "pavucontrol-qt"
-    }
-}, {
-    "layer": "top", // Waybar at top layer
-    "position": "bottom", // Waybar position (top|bottom|left|right)
-    "output": "HDMI-A-1",
-    "height": 1, // Waybar height (to be removed
-    // "spacing": 5, // Gaps between modules (4px)
-    "modules-center": [
-        "hyprland/workspaces"
-    ],
-    "hyprland/workspaces": {
-     "window-rewrite": {},
-        "disable-scroll": true,
-        "all-outputs": false,
-        "warp-on-scroll": false,
-        "format": "{icon}",
-        "format-icons": {
-            "default": "_"
-        }
     },
-}]
+}//,{
+ //   "name": "top",
+ //   "layer": "top", // Waybar at top layer
+ //   "position": "bottom", // Waybar position (top|bottom|left|right)
+ //   "output": "HDMI-A-1",
+ //   "height": 1, // Waybar height (to be removed
+ //   // "spacing": 5, // Gaps between modules (4px)
+ //   "modules-center": [
+ //       "hyprland/workspaces"
+ //   ],
+ //   "hyprland/workspaces": {
+ //       "format": "{windows}",
+ //       "format-window-separator": " ",
+ //       "window-rewrite-default": "",
+ //       "window-rewrite": {
+ //           "class<chrome.youtube.*>":       "", // Windows whose titles contain "youtube"
+ //           "class<firefox>":                "", // Windows whose classes are "firefox"
+ //           "class<google-chrome>":          "",
+ //           "class<chrome-music.youtube.*>": "󰐌",
+ //           "class<chrome-web.telegram.*>":  "",
+ //           //"title<.*github.*>":             "", // Windows whose class is "firefox" and title contains "github". Note that "class" always comes first.
+ //           "class<kitty>":                  "", 
+ //           "class<org.kde.kate>":           "󰅩",
+ //           "class<org.kde.dolphin>":        "",
+ //           
+ //       },
+ //   },
+ //   //"hyprland/workspaces": {
+ //   // "window-rewrite": {},
+ //   //    "disable-scroll": true,
+ //   //    "all-outputs": false,
+ //   //    "warp-on-scroll": false,
+ //   //    "format": "{icon}",
+ //   //    "format-icons": {
+ //   //        "default": "_"
+ //   //    }
+ //   //},
+ // }
+]

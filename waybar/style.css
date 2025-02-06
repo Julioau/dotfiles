@@ -2,6 +2,7 @@
     font-family: 'SpaceMono Nerd Font', 'Font Awesome 6 Free', 'Font Awesome 6 Brands', monospace;
     font-size: 13px;
     border-radius: 10px;
+    padding: 0px;
 }
 
 window#waybar {
@@ -26,7 +27,7 @@ window#waybar.solo {
 }
 */
 
-/*window#waybar.termite {
+/*window#waybar.termitmargin-top: 5px;e {
     background-color: #3F3F3F;
 }r
 
@@ -35,29 +36,55 @@ window#waybar.chromium {
     border: none;
 }*/
 
-button {
-    /* Use box-shadow instead of border so the text isn't offset */
+/*button {
+    Use box-shadow instead of border so the text isn't offset
     box-shadow: inset 0 -3px transparent;
-    /* Avoid rounded borders under each button name */
+    Avoid rounded borders under each button name
     border: none;
     border-radius: 0;
-}
+}*/
 
 /* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
-button:hover {
+/*button:hover {
     background: inherit;
+}*/
+
+window.top #workspaces {
+    margin-top:    0px;
+    margin-bottom: 5px;
+}
+window.bottom #workspaces {
+    margin-top: 5px;
+    margin-bottom: 0px;
 }
 
 #workspaces button {
-    padding: 0 12px;
+    padding-right: 8px;
+    padding-left:  7px;
     border-radius: 10px;
     background-color: #575268;
+    margin-right: 5px;
+}
+
+#workspaces button.visible {
+    color: #000000;
+    background: #89dceb;
+}
+
+#workspaces button.active {
+    color: #000000;
+    background: #a6e3a1;
+}
+
+#workspaces button.empty {
+    padding-right: 11px;
+    padding-left:  11px;
+    border-radius: 12px;
 }
 
 #workspaces button:hover {
-    color: #1e1e2e;
-    background: #cdd6f4;
-
+    color: #000000;
+    background: #cccccc;
 }
 
 #workspaces button.focused {
@@ -68,10 +95,10 @@ button:hover {
     background-color: #eb4d4b;
 }
 
-#mode {
+/*#mode {
     background-color: #64727D;
     border-bottom: 3px solid #ffffff;
-}
+}*/
 #window,
 #clock,
 #battery,
@@ -85,7 +112,7 @@ button:hover {
 #wireplumber,
 #custom-media,
 #tray,
-#mode,
+/*#mode,*/
 #scratchpad,
 #custom-gpu,
 #power-profiles-daemon
@@ -96,25 +123,25 @@ button:hover {
 
 #window {
     background-color: #1e1e2e;
-    padding: 0 10px;
-}
-#workspaces {
-    margin: 0 5px;
+    padding-right: 7px;
+    padding-left:  7px;
+    margin-top:     5px;
 }
 
-/* If workspaces is the leftmost module, omit left margin */
+/* If workspaces is the leftmost module, omit left margin
 .modules-left > widget:first-child > #workspaces {
     margin-left: 0;
 }
 
-/* If workspaces is the rightmost module, omit right margin */
+If workspaces is the rightmost module, omit right margin 
 .modules-right > widget:last-child > #workspaces {
     margin-right: 0;
-}
+}*/
 
 #clock {
     background-color: #1e1e2e;
-    padding: 5px 10px;
+    margin-top: 5px;
+    margin-left: 5px;
 }
 
 @keyframes blink {
@@ -131,13 +158,13 @@ label:focus {
 #memory {
     background-color: #89dceb;
     color: #000000;
-    padding: 0 10px;
+    margin-top: 5px;
+/*     margin-right: 5px; */
 }
 
 #battery {
     background-color: #eba0ac;
     color: #000000;
-    padding: 0 10px;
 }
 
 /*#battery.charging, #battery.plugged {*/
@@ -151,7 +178,7 @@ label:focus {
 #network {
     background-color: #cba6f7;
     color: #000000;
-    padding: 0 10px;
+    padding-right: 8px;
 }
 
 #network.disconnected {
@@ -161,7 +188,6 @@ label:focus {
 #pulseaudio {
     background-color: #f9e2af;
     color: #000000;
-    padding: 0 10px;
 }
 
 #pulseaudio.muted {
@@ -181,7 +207,7 @@ label:focus {
 #temperature {
     background-color: #89b4fa;
     color: #000000;
-    padding: 0 10px;
+    padding-right: 11px
 }
 
 #temperature.critical {
@@ -191,18 +217,19 @@ label:focus {
 #custom-gpu {
     background-color: #a6e3a1;
     color: #000000;
-    padding: 0 10px;
+    margin-right: 6px
 }
 
 #power-profiles-daemon {
     background-color: #f38ba8;
     color: #000000;
-    padding: 0 10px;
+    margin-top: 5px;
+    padding-right: 9px;
+    padding-left: 6px;
 }
 
 #tray {
-    background-color: #1e1e2e;
-    padding: 0 10px;
+    background-color: #575268;
 }
 
 #tray > .passive {

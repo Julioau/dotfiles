@@ -1,0 +1,55 @@
+* {
+    font-family: 'SpaceMono Nerd Font', monospace;
+}
+
+window.bar {
+/*     background-color: @theme_bg_color; */
+    color: @theme_fg_color;
+/*     padding-top: 5px; */
+}
+
+button {
+    border-radius: 10px;
+/*     min-width: 20px; */
+    padding-left: 5px;
+/*     background-color: @theme_selected_fg_color; */
+    border: 2px solid #6C7A89;
+}
+
+button:active {
+    background-color: @theme_selected_bg_color;
+}
+
+/*button:selection {
+    background-color: @theme_selected_bg_color;
+}*/
+
+button:hover {
+    border: 2px solid @theme_selected_bg_color;
+}
+
+label {
+/*     font-family: 'SpaceMono Nerd Font', monospace; */
+    font-weight: bold;
+}
+
+/*.workspaces button {
+    padding-right: 5px;
+}*/
+
+.workspaces button.focused {
+    border-right: 2px solid @theme_selected_bg_color;
+}
+
+.client-title {
+/*     color: @theme_selected_bg_color; */
+}
+
+.notification {
+    color: yellow;
+}
+
+levelbar block,
+highlight {
+    min-height: 5px;
+}
