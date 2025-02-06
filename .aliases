@@ -1,2 +1,5 @@
-alias moodle-dl='cd ~/Archive/MoodleScraper/ ; moodle-dl ; cd -'
+moodle() {
+  cd ~/Archive/MoodleScraper/;moodle-dl $1;cd -
+}
+
 alias yt-dla='yt-dlp --embed-thumbnail --embed-metadata -f 'ba' -q -x --audio-format mp3 --audio-quality 320k'

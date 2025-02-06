@@ -27,9 +27,10 @@ window#waybar.solo {
 }
 */
 
-/*window#waybar.termitmargin-top: 5px;e {
+/*window#waybar.termite {
+    margin-top: 5px;
     background-color: #3F3F3F;
-}r
+}
 
 window#waybar.chromium {
     background-color: #000000;
@@ -99,6 +100,7 @@ window.bottom #workspaces {
     background-color: #64727D;
     border-bottom: 3px solid #ffffff;
 }*/
+
 #window,
 #clock,
 #battery,
@@ -116,6 +118,7 @@ window.bottom #workspaces {
 #scratchpad,
 #custom-gpu,
 #power-profiles-daemon
+
 /*#mpd {
     padding: 0 10px;
     color: #ffffff;
