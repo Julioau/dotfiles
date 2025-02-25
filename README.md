@@ -1,3 +1,5 @@
+![another hyprland catppuccin rice](./smallShowcase.jpeg "Text to show on mouseover")
+
 # My everchanging configurations
 * First things first, [Hyprland](https://hyprland.org/) is the best tiling window manager i've ever used. The animations make me so happy.
 * [waybar](https://github.com/Alexays/Waybar) is okay, but I am thinking about switching to [AGS](https://github.com/Aylur/ags) for unlimited customization 😈
