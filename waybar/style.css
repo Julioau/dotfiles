@@ -116,7 +116,7 @@ window.bottom #workspaces {
 #tray,
 /*#mode,*/
 #scratchpad,
-#custom-gpu,
+/* #custom-gpu, */
 #power-profiles-daemon
 
 /*#mpd {
@@ -166,7 +166,7 @@ label:focus {
     background-color: #89dceb;
     color: #000000;
     margin-top: 5px;
-/*     margin-right: 5px; */
+    margin-right: 5px;
 }
 
 #battery {
@@ -221,11 +221,11 @@ label:focus {
     background-color: #f38ba8;
 }
 
-#custom-gpu {
+/*#custom-gpu {
     background-color: #a6e3a1;
     color: #000000;
     margin-right: 6px
-}
+}*/
 
 #power-profiles-daemon {
     background-color: #f38ba8;
