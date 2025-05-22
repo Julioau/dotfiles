@@ -50,4 +50,4 @@ else
     clip_id="${choice}"
 fi
 
-printf "$clip_id" | cliphist decode
+printf "$clip_id" | cliphist decode | wl-copy

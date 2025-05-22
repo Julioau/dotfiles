@@ -16,6 +16,7 @@
         "hyprland/window"
     ],
     "modules-right": [
+        "idle_inhibitor",
         "tray",
         "pulseaudio",
         "battery",
@@ -41,8 +42,10 @@
             "class<chrome-web.telegram.*>":  "",
             "class<chrome-web.whatsapp.*>":  "",
             "class<chrome-gemini.*>":        "🟆",
+            "class<chrome-chat.openai.*>":   "🟆",
             //"title<moodle.*>":        "💠",
-            //"title<.*github.*>":             "", 
+            //"title<.*github.*>":             "",
+            "class<org.kde.kile>":           "", 
             "class<kitty>":                  "", 
             "class<firefox>":                "", // Windows whose classes are "firefox"
             "class<org.kde.kate>":           "󰅩", // Note that "class" always comes first.
@@ -72,9 +75,17 @@
     },
     "clock": {
         "format": "{:%I:%M %a %d %b}",
+        //    ex:   04:28 Sun 04 May
         // "timezone": "America/New_York",
         // "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         // "format-alt": "{:%d/%m/%Y}"
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "󰛊",
+            "deactivated": "󰾫"
+        }
     },
     //"wlr/taskbar": {
     //    "all-outputs": false,

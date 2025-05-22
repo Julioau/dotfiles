@@ -117,7 +117,8 @@ window.bottom #workspaces {
 /*#mode,*/
 #scratchpad,
 /* #custom-gpu, */
-#power-profiles-daemon
+#power-profiles-daemon,
+#idle_inhibitor
 
 /*#mpd {
     padding: 0 10px;
@@ -147,6 +148,15 @@ If workspaces is the rightmost module, omit right margin
 
 #clock {
     background-color: #1e1e2e;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+#idle_inhibitor {
+    background-color: #575268;
+    padding-right: 10px;
+    padding-left:  7px;
+    border-radius: 10px;
     margin-top: 5px;
     margin-left: 5px;
 }

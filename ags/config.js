@@ -72,7 +72,7 @@ function Clock() {
     return Widget.Label({
         class_name: "clock",
         css: "min-width: 100px", 
-        css: "padding-right: 20px",
+        // css: "padding-right: 20px",
         label: date.bind(),
     })
 }
