@@ -1,0 +1,1 @@
+complete --command expdb --no-files --arguments "(env _EXPDB_COMPLETE=complete_fish _TYPER_COMPLETE_FISH_ACTION=get-args _TYPER_COMPLETE_ARGS=(commandline -cp) expdb)" --condition "env _EXPDB_COMPLETE=complete_fish _TYPER_COMPLETE_FISH_ACTION=is-args _TYPER_COMPLETE_ARGS=(commandline -cp) expdb"

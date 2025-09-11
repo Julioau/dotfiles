@@ -1,15 +1,14 @@
-font_family         SpaceMono Nerd Font
+
+font_family         Source Code Pro
 tab_bar_style       powerline
-background_opacity  0.2
+background_opacity  1
 kitty_mod           ctrl+shift
 map ctrl+c          copy_and_clear_or_interrupt
 map ctrl+v          paste_from_clipboard
 map kitty_mod+f11   toggle_fullscreen
 map kitty_mod+f5    load_config_file
-include             current-theme.conf
-
 
 # BEGIN_KITTY_THEME
 # Catppuccin-Mocha
-include current-theme.conf
+include             current-theme.conf
 # END_KITTY_THEME
