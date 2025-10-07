@@ -1,6 +1,6 @@
 if status is-interactive
+  set -U fish_greeting
     # Commands to run in interactive sessions can go here
-    fastfetch
 end
 
 function __history_previous_command
@@ -81,4 +81,24 @@ if functions --query _natural_selection
   bind ctrl-z           '_natural_selection undo'
   bind ctrl-shift-z     '_natural_selection redo'
   bind ''                kill-selection end-selection self-insert
+end
+
+function dart --argument server_num
+    TERM=xterm-color sshpass -p 'ci101.2' ssh "dart$server_num@10.35.1.$server_num"
+end
+
+function dell --argument server_num
+    set -l ip_end
+    switch $server_num
+        case 3
+            set ip_end 220
+        case 4
+            set ip_end 240
+        case 5
+            set ip_end 198
+        case '*'
+            echo "Invalid server number: $server_num. Use 3, 4, or 5."
+            return 1
+    end
+    TERM=xterm-color sshpass -p 'cePES110!' ssh "dellcloud@10.32.45.$ip_end"
 end

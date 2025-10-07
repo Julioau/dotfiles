@@ -137,12 +137,12 @@
             "power-saver": "󰡳"
         }
     },
-  //"custom/gpu": {
-  //    "exec": "nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits",
-  //    "format": "{}°C {icon}",
-  //    "interval": 1,
-  //    "format-icons": ["󰢮"]
-  //},
+  "custom/gpu": {
+     "exec": "nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits",
+     "format": "{}°C {icon}",
+     "interval": 1,
+     "format-icons": ["󰢮"]
+  },
     "network": {
         // "interface": "wlp2*", // (Optional) To force the use of this interface
         "format-wifi": "{essid} 󰤨 ",
