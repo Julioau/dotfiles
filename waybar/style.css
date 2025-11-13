@@ -62,14 +62,34 @@ window.bottom #workspaces {
 #workspaces button {
     padding-right: 8px;
     padding-left:  7px;
-    border-radius: 10px;
+    border-radius: 0px;
+    border: 2px solid transparent;
     background-color: #575268;
-    margin-right: 5px;
+    margin-right: 0px; /* Remove margin by default */
+}
+
+/* Rounded left corners for buttons 1, 4, 7, ... */
+#workspaces button:nth-child(3n + 1) {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+/* Rounded right corners for buttons 3, 6, 9, ... */
+#workspaces button:nth-child(3n) {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    margin-right: 5px; /* Add margin to the end of each group */
+}
+
+/* Style for workspaces 10 and onwards */
+#workspaces button:nth-child(n+10) {
+    border-radius: 10px; /* Fully rounded corners */
+    margin-right: 5px;   /* Restore the margin */
 }
 
 #workspaces button.visible {
     color: #000000;
-    background: #89dceb;
+    background: #a6e3a1;
 }
 
 #workspaces button.active {
@@ -80,12 +100,14 @@ window.bottom #workspaces {
 #workspaces button.empty {
     padding-right: 11px;
     padding-left:  11px;
-    border-radius: 12px;
+    /* border-radius: 0px; */
 }
 
 #workspaces button:hover {
-    color: #000000;
-    background: #cccccc;
+    background-color: #1e1e2e;
+    color: white;
+    border: 2px solid #a6e3a1;
+    /* transition: border-color 0.3s ease; */
 }
 
 #workspaces button.focused {

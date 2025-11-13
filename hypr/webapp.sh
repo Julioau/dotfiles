@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# A script to launch Chrome in a website or focus it if it's already open.
+# A script to launch a browser in a website or focus it if it's already open.
 
 # boilerplate
 if [[ $# -ne 1 ]]; then
@@ -22,5 +22,18 @@ select(.initialTitle == $initialTitle) | .address')
 if [[ -n "$WINDOW_ADDRESS" ]]; then
     hyprctl dispatch focuswindow address:"$WINDOW_ADDRESS"
 else
-    hyprctl dispatch exec "google-chrome-stable --app=$APP_URL"
+    # Find default browser and launch as an app.
+    # Note: The --app flag is specific to Chromium-based browsers.
+    BROWSER_EXEC="google-chrome-stable" # Default fallback
+
+    BROWSER_DESKTOP_FILE=$(xdg-settings get default-web-browser)
+    if [[ -n "$BROWSER_DESKTOP_FILE" ]]; then
+        # Heuristic: try to use the desktop file name as the executable name
+        CANDIDATE_EXEC=${BROWSER_DESKTOP_FILE%.desktop}
+        if command -v "$CANDIDATE_EXEC" &> /dev/null; then
+            BROWSER_EXEC="$CANDIDATE_EXEC"
+        fi
+    fi
+    
+    hyprctl dispatch exec "$BROWSER_EXEC --app=$APP_URL"
 fi

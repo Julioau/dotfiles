@@ -9,7 +9,6 @@
     // Choose the order of the modules
     "modules-left": [
         "clock",
-        //"wlr/taskbar",
         "hyprland/workspaces"
     ],
     "modules-center": [
@@ -57,18 +56,6 @@
             "class<wofi>":                   "",
         },
     },
-    //"hyprland/workspaces": {
-    // "window-rewrite": {},
-    //    "disable-scroll": true,
-    //    "all-outputs": false,
-    //    "warp-on-scroll": false,
-    //    "format": "{icon}",
-    //    "format-icons": {
-    //        "urgent": "",
-    //        "focused": "",
-    //        "default": "•"
-    //    }
-    //},
     "tray": {
         "icon-size": 15,
         "spacing": 10
@@ -87,13 +74,6 @@
             "deactivated": "󰾫"
         }
     },
-    //"wlr/taskbar": {
-    //    "all-outputs": false,
-    //    // "active-first": true,
-    //    "sort-by-app-id": true,
-    //    "on-click": "activate",
-    //    "on-click-middle": "close",
-    //},
     "memory": {
         "format": "{used:0.1f} GiB",
         "tooltip": false,
@@ -151,10 +131,7 @@
         "tooltip-format": "{ifname} via {gwaddr} ",
         "format-linked": "{ifname} (No IP) ",
         "format-disconnected": "Disconnected ⚠",
-        "format-alt": "{ifname}: {ipaddr}/{cidr}",
-        "format-ifname-icons": {
-        
-        }
+        "format-alt": "{ifname}: {ipaddr}/{cidr}"
     },
     "pulseaudio": {
         // "scroll-step": 1, // %, can be a float
@@ -175,43 +152,5 @@
             "default": ["", "", ""]
         },
         "on-click": "pavucontrol-qt"
-    },
-}//,{
- //   "name": "top",
- //   "layer": "top", // Waybar at top layer
- //   "position": "bottom", // Waybar position (top|bottom|left|right)
- //   "output": "HDMI-A-1",
- //   "height": 1, // Waybar height (to be removed
- //   // "spacing": 5, // Gaps between modules (4px)
- //   "modules-center": [
- //       "hyprland/workspaces"
- //   ],
- //   "hyprland/workspaces": {
- //       "format": "{windows}",
- //       "format-window-separator": " ",
- //       "window-rewrite-default": "",
- //       "window-rewrite": {
- //           "class<chrome.youtube.*>":       "", // Windows whose titles contain "youtube"
- //           "class<firefox>":                "", // Windows whose classes are "firefox"
- //           "class<google-chrome>":          "",
- //           "class<chrome-music.youtube.*>": "󰐌",
- //           "class<chrome-web.telegram.*>":  "",
- //           //"title<.*github.*>":             "", // Windows whose class is "firefox" and title contains "github". Note that "class" always comes first.
- //           "class<kitty>":                  "", 
- //           "class<org.kde.kate>":           "󰅩",
- //           "class<org.kde.dolphin>":        "",
- //           
- //       },
- //   },
- //   //"hyprland/workspaces": {
- //   // "window-rewrite": {},
- //   //    "disable-scroll": true,
- //   //    "all-outputs": false,
- //   //    "warp-on-scroll": false,
- //   //    "format": "{icon}",
- //   //    "format-icons": {
- //   //        "default": "_"
- //   //    }
- //   //},
- // }
-]
+    }
+}]
