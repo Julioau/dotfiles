@@ -1,0 +1,2 @@
+SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", ATTR{idProduct}=="6860", ACTION=="add", RUN+="/usr/local/bin/adBat.sh connected"
+SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", ATTR{idProduct}=="6860", ACTION=="remove", RUN+="/usr/local/bin/adBat.sh disconnected"
