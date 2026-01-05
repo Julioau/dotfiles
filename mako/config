@@ -1,0 +1,14 @@
+font=SpaceMono Nerd Font 10
+
+background-color=#1E1E2EFF
+border-color=#A6E3A1FF
+border-size=2
+border-radius=10
+outer-margin=1
+margin=5
+max-icon-size=32
+icon-border-radius=10
+
+format=<b>%s</b>\n%b
+
+on-button-left=invoke-default-action
