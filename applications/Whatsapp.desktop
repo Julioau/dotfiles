@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Whatsapp
+Comment=Whatsapp
+Exec=google-chrome-stable --app=https://web.whatsapp.com/
+Terminal=false
+Type=Application
+Icon=whatsapp
+StartupNotify=true

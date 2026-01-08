@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Calendar
+Comment=Calendar
+Exec=google-chrome-stable --class="office-calendar" --app=https://calendar.google.com
+Terminal=false
+Type=Application
+Icon=office-calendar
+StartupWMClass=office-calendar
+StartupNotify=true

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=YouTube Music
+Comment=YouTube Music
+Exec=google-chrome-stable --app=https://music.youtube.com
+Terminal=false
+Type=Application
+Icon=youtube-music
+StartupNotify=true

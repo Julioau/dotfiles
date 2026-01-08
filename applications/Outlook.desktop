@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Outlook
+Comment=Outlook
+Exec=google-chrome-stable --app=https://outlook.office365.com/
+Terminal=false
+Type=Application
+Icon=ms-outlook
+StartupNotify=true

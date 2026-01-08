@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Discord
+Comment=Discord
+Exec=google-chrome-stable --app=https://discord.com/channels/892538013475815444/1214636778645102612
+Terminal=false
+Type=Application
+Icon=discord
+StartupNotify=true

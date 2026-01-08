@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Teams
+Comment=Teams
+Exec=google-chrome-stable --app=https://teams.microsoft.com/
+Terminal=false
+Type=Application
+Icon=teams
+StartupNotify=true
