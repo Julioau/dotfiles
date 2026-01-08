@@ -10,10 +10,13 @@ Rectangle {
     id: root // Identifier for the root element.
     // Exposes a property to receive the global font from the parent.
     property string globalFont: "SpaceMono Nerd Font Propo"
+    property color widgetColor: Theme.background
+    property color textColor: widgetColor === Theme.background ? Theme.text : Theme.background
+
     // Exposes a property to signal if the parent window is visible, to control process running.
     property bool windowVisible: false
 
-    color: Theme.background // Background color.
+    color: widgetColor // Background color.
     radius: 10 // Rounded corners.
     
     border.width: 2 // Border width.
@@ -25,7 +28,7 @@ Rectangle {
     Text {
         id: netText // Identifier for the network Text element.
         anchors.centerIn: parent // Centers text within its parent.
-        color: Theme.text // Text color.
+        color: textColor // Text color.
         font.family: root.globalFont // Uses global font.
         text: "Net" // Initial text display.
     }

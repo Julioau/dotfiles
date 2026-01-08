@@ -11,3 +11,11 @@ var blue = "#89b4fa";
 var orange = "#fab387";
 var text = "white";
 var transparent = "transparent";
+
+// Added colors for Rainbow
+var yellow = "#f9e2af";
+var pink = "#eba0ac";
+var sky = "#89dceb";
+
+// Rainbow array (Yellow -> Pink -> Red -> Mauve -> Blue -> Sky -> Green)
+var rainbow = [yellow, pink, red, mauve, blue, sky, green];

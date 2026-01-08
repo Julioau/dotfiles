@@ -9,10 +9,13 @@ import "Theme.js" as Theme
 // It allows controlling volume and mute state, and shows popups with device descriptions on hover.
 RowLayout {
     property string globalFont: "SpaceMono Nerd Font Propo"
+    property color widgetColor: Theme.background
+    property color textColor: widgetColor === Theme.background ? Theme.text : Theme.background
 
     // 2. Audio Output (Speaker) Widget
     Rectangle {
-        color: Theme.background // Background color.
+        id: speakerRect
+        color: audio && audio.muted ? Theme.background : widgetColor
         radius: 10 // Rounded corners.
         Layout.fillHeight: true // Fills available height.
         Layout.preferredWidth: speakerText.implicitWidth + 20 // Width based on text content + padding.
@@ -26,7 +29,7 @@ RowLayout {
             id: speakerText // Identifier for the speaker Text element.
             anchors.centerIn: parent // Centers text within its parent.
             // Text color changes if audio is muted.
-            color: parent.audio && parent.audio.muted ? Theme.red : Theme.text
+            color: speakerRect.audio && speakerRect.audio.muted ? Theme.text : textColor
             font.family: globalFont // Uses global font.
             text: {
                 if (!parent.audio) return "󰝟 --"; // Display 'no audio' icon if no audio object.
@@ -100,7 +103,8 @@ RowLayout {
 
     // 2.1 Audio Input (Mic) Widget - Similar in structure to the Audio Output widget.
     Rectangle {
-        color: Theme.background // Background color.
+        id: micRect
+        color: audio && audio.muted ? Theme.background : widgetColor
         radius: 10 // Rounded corners.
         Layout.fillHeight: true // Fills available height.
         Layout.preferredWidth: micText.implicitWidth + 20 // Width based on text content + padding.
@@ -116,7 +120,7 @@ RowLayout {
             id: micText // Identifier for the mic Text element.
             anchors.centerIn: parent // Centers text within its parent.
             // Text color changes if audio is muted.
-            color: parent.audio && parent.audio.muted ? Theme.red : Theme.text
+            color: micRect.audio && micRect.audio.muted ? Theme.text : textColor
             font.family: globalFont // Uses global font.
             text: {
                 if (!parent.audio) return "󰍭 --"; // Display 'no audio' icon if no audio object.

@@ -221,6 +221,7 @@ Scope { // The root element of this QML file, defining the scope for properties 
                 AudioWidget {
                     id: audioWidgets // Identifier for the AudioWidget instance.
                     globalFont: window.globalFont // Pass the global font to the AudioWidget.
+                    widgetColor: Theme.rainbow[0]
                 }
 
                 // 3, 4, 5. Battery Widgets - Now encapsulated in BatteryWidget.
@@ -230,11 +231,12 @@ Scope { // The root element of this QML file, defining the scope for properties 
                     mainBattery: window.mainBattery // Pass the identified main battery object.
                     phoneConnected: root.phoneConnected // Pass the phone connection status.
                     windowVisible: window.visible // Pass the window visibility.
+                    widgetColor: Theme.rainbow[1]
                 }
 
                 // 6. Power Profiles Cycler: Allows cycling through power profiles (e.g., Power Saver, Balanced, Performance).
                 Rectangle {
-                    color: Theme.background // Background color.
+                    color: Theme.rainbow[2] // Rainbow Index 2
                     radius: 10 // Rounded corners.
                     
                     border.width: 2 // Border width.
@@ -246,14 +248,14 @@ Scope { // The root element of this QML file, defining the scope for properties 
                     Text {
                         id: profileText // Identifier for the profile Text element.
                         anchors.centerIn: parent // Centers text within its parent.
-                        color: Theme.text // Text color.
+                        color: Theme.background // Text color (Dark on Red)
                         font.family: window.globalFont // Uses global font.
-                        text: { // Displays the current power profile.
+                        text: { // Displays the current power profile icon.
                             switch (PowerProfiles.profile) {
-                                case PowerProfile.PowerSaver: return "Pwr: Saver";
-                                case PowerProfile.Balanced: return "Pwr: Bal";
-                                case PowerProfile.Performance: return "Pwr: Perf";
-                                default: return "?" + PowerProfiles.profile; 
+                                case PowerProfile.PowerSaver: return "󰡳";
+                                case PowerProfile.Balanced: return "󰡵";
+                                case PowerProfile.Performance: return "󰡴";
+                                default: return "󰡴"; 
                             }
                         }
                     }
@@ -284,6 +286,7 @@ Scope { // The root element of this QML file, defining the scope for properties 
                     id: networkWidget // Identifier for the NetworkWidget instance.
                     globalFont: window.globalFont // Pass the global font.
                     windowVisible: window.visible // Pass the visibility state of the parent window.
+                    widgetColor: Theme.rainbow[3]
                 }
             }
 
