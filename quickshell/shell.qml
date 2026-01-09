@@ -1,21 +1,23 @@
-import Quickshell // Core Quickshell utilities.
-import Quickshell.Io // Input/Output related functionalities, like Process.
-import Quickshell.Hyprland // Hyprland-specific integrations.
+//@ pragma UseQApplication
+import Quickshell                   // Core Quickshell utilities.
+import Quickshell.Io                // Input/Output related functionalities, like Process.
+import Quickshell.Hyprland          // Hyprland-specific integrations.
 import Quickshell.Services.Pipewire // Services for Pipewire audio management.
-import Quickshell.Services.UPower // Services for UPower (battery, power profiles) management.
-import QtQuick // Core QML types and elements.
-import QtQuick.Layouts // Provides layout managers like RowLayout.
-import QtQuick.Controls // Provides UI controls like PopupWindow.
-import "Theme.js" as Theme // Import the custom Theme JS library.
-import "AudioWidget.qml" // Import the modular AudioWidget component.
-import "BatteryWidget.qml" // Import the modular BatteryWidget component.
-import "NetworkWidget.qml" // Import the modular NetworkWidget component.
+import Quickshell.Services.UPower   // Services for UPower (battery, power profiles) management.
+import QtQuick                      // Core QML types and elements.
+import QtQuick.Layouts              // Provides layout managers like RowLayout.
+import QtQuick.Controls             // Provides UI controls like PopupWindow.
+import "Theme.js" as Theme          // Color scheme.
+import "AudioWidget.qml"            // AudioWidget.
+import "BatteryWidget.qml"          // BatteryWidget.
+import "NetworkWidget.qml"          // NetworkWidget.
 
 Scope { // The root element of this QML file, defining the scope for properties and functions.
     id: root // Identifier for the Scope, allowing other elements to reference it.
 
     property bool isBarVisible: true // A property to control the overall visibility of the bar.
     property bool phoneConnected: false // Controlled by external udev rule via IPC
+    property bool debugMode: true // Global debug flag.
 
     // IpcHandler allows external processes to interact with this QML component.
     IpcHandler {
@@ -27,6 +29,10 @@ Scope { // The root element of this QML file, defining the scope for properties 
         // Function to set phone connection status, called by udev script
         function setPhoneConnected(connected: bool): void {
             root.phoneConnected = connected;
+        }
+        function setDebug(enabled: bool): void {
+            root.debugMode = enabled;
+            console.log("Debug mode set to: " + enabled);
         }
     }
 
@@ -128,8 +134,7 @@ Scope { // The root element of this QML file, defining the scope for properties 
                 }
             }
 
-            // --- Workspaces Widget (Right of Clock) ---
-            // Includes the Workspaces component, which visualizes Hyprland workspaces and their windows.
+            // Workspaces Widget
             Workspaces {
                 id: workspacesWidget // Identifier for the Workspaces component instance.
                 anchors.left: clockContainer.right // Positions it to the right of the clock container.
@@ -160,7 +165,7 @@ Scope { // The root element of this QML file, defining the scope for properties 
                     
                     color: Theme.text
                     text: root.windowTitle // Binds the text to the active window title.
-                    font.family: window.globalFont // Uses the global font. (not yet working!)
+                    font.family: window.globalFont // Uses the global font. 
                     
                     elide: Text.ElideRight // Truncates text with "..." at the end if it's too long.
                     horizontalAlignment: Text.AlignHCenter // Centers the text horizontally.
@@ -174,10 +179,15 @@ Scope { // The root element of this QML file, defining the scope for properties 
                 height: clockContainer.height 
                 spacing: 5 // Spacing between items in this RowLayout.
 
+                // System Tray
+                SystemTrayWidget {
+                    debug: root.debugMode
+                }
+
                 // Caffeine (Idle Inhibitor) Button: Prevents the system from going idle.
                 Rectangle {
                     id: caffeineBtn // Identifier for the caffeine button's background.
-                    color: Theme.background // Background color.
+                    color: caffeineBtn.isCaffeinated ? Theme.rainbow[4] : Theme.background // Background color.
                     radius: 10 // Rounded corners.
                     
                     border.width: 2 // Border width.
@@ -193,10 +203,10 @@ Scope { // The root element of this QML file, defining the scope for properties 
                     Text {
                         id: caffeineText // Identifier for the caffeine Text element.
                         anchors.centerIn: parent // Centers the text within its parent (caffeineBtn).
-                        text: "☕" // Displays a coffee cup emoji.
+                        text: caffeineBtn.isCaffeinated ? "󰛊" : "󰾫" // Waybar-style icons.
                         // Text color changes based on 'isCaffeinated' state.
-                        color: caffeineBtn.isCaffeinated ? Theme.green : Theme.orange 
-                        font.family: window.globalFont // Uses the global font. (not yet working!)
+                        color: caffeineBtn.isCaffeinated ? Theme.background : Theme.text
+                        font.family: window.globalFont // Uses the global font. 
                     }
 
                     MouseArea {
@@ -217,16 +227,17 @@ Scope { // The root element of this QML file, defining the scope for properties 
                     }
                 }
 
-                // 2. Audio Widgets (Speaker and Mic) - Now encapsulated in AudioWidget.
+                // Audio Widgets (Speaker and Mic)
                 AudioWidget {
                     id: audioWidgets // Identifier for the AudioWidget instance.
                     globalFont: window.globalFont // Pass the global font to the AudioWidget.
                     widgetColor: Theme.rainbow[0]
                 }
 
-                // 3, 4, 5. Battery Widgets - Now encapsulated in BatteryWidget.
+                // Battery Widgets
                 BatteryWidget {
                     id: batteryWidgets // Identifier for the BatteryWidget instance.
+                    debug: root.debugMode
                     globalFont: window.globalFont // Pass the global font.
                     mainBattery: window.mainBattery // Pass the identified main battery object.
                     phoneConnected: root.phoneConnected // Pass the phone connection status.
@@ -234,7 +245,7 @@ Scope { // The root element of this QML file, defining the scope for properties 
                     widgetColor: Theme.rainbow[1]
                 }
 
-                // 6. Power Profiles Cycler: Allows cycling through power profiles (e.g., Power Saver, Balanced, Performance).
+                // Power Profiles Cycler
                 Rectangle {
                     color: Theme.rainbow[2] // Rainbow Index 2
                     radius: 10 // Rounded corners.
@@ -281,7 +292,13 @@ Scope { // The root element of this QML file, defining the scope for properties 
                     }
                 }
 
-                // 7. Network Indicator (Rightmost) - Now encapsulated in NetworkWidget.
+                // System Stats (Temperature and Memory)
+                SystemStatsWidget {
+                    debug: root.debugMode
+                    globalFont: window.globalFont
+                }
+
+                // Network Indicator
                 NetworkWidget {
                     id: networkWidget // Identifier for the NetworkWidget instance.
                     globalFont: window.globalFont // Pass the global font.

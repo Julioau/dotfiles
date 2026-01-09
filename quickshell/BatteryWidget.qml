@@ -11,6 +11,7 @@ RowLayout {
     id: root // Identifier for the root element.
     // Exposes a property to receive the global font from the parent.
     property string globalFont: "SpaceMono Nerd Font Propo"
+    property bool debug: false
     property color widgetColor: Theme.background
     property color textColor: widgetColor === Theme.background ? Theme.text : Theme.background
 
@@ -38,12 +39,12 @@ RowLayout {
         running: false // Controlled manually by timer and IPC
         
         // Debug logging for process start
-        onRunningChanged: if (running) console.log("ADB Process Started")
+        onRunningChanged: if (running && root.debug) console.log("ADB Process Started")
 
         stdout: StdioCollector {
             onStreamFinished: {
                 // Debug raw output (first 50 chars to avoid spam)
-                // console.log("ADB Output received: " + text.substring(0, 50) + "...")
+                if (root.debug) console.log("ADB Output received: " + text.substring(0, 50) + "...")
 
                 // Split the output into individual lines for line-by-line processing.
                 var lines = text.split("\n");
@@ -59,19 +60,19 @@ RowLayout {
                         
                         // If it's a valid number, update the property.
                         if (!isNaN(val)) {
-                            console.log("ADB Battery Level Found: " + val);
+                            if (root.debug) console.log("ADB Battery Level Found: " + val);
                             root.phoneBatLevel = val;
                             foundLevel = true;
                             break; // Stop looking after finding the level.
                         } else {
-                            console.log("ADB Parse Error: level is NaN");
+                            if (root.debug) console.log("ADB Parse Error: level is NaN");
                         }
                     }
                 }
                 
                 // If "level:" wasn't found (e.g. adb error or wrong output), reset to -1.
                 if (!foundLevel) {
-                    console.log("ADB Level not found in output.");
+                    if (root.debug) console.log("ADB Level not found in output.");
                     root.phoneBatLevel = -1;
                 }
             }
@@ -79,7 +80,7 @@ RowLayout {
         
         stderr: StdioCollector {
             onStreamFinished: {
-                if (text.length > 0) console.log("ADB Error: " + text);
+                if (text.length > 0 && root.debug) console.log("ADB Error: " + text);
             }
         }
     }
