@@ -57,8 +57,8 @@ RowLayout {
             // Handles mouse wheel events for volume adjustment.
             onWheel: (wheel) => {
                 if (!parent.audio) return;
-                var change = 0.05; // Default volume change step.
-                if (wheel.angleDelta.y < 0) change = -0.05; // Decrease volume on scroll down.
+                var change = 0.01; // Default volume change step.
+                if (wheel.angleDelta.y < 0) change = -0.01; // Decrease volume on scroll down.
                 
                 var newVol = parent.audio.volume + change; // Calculate new volume.
                 if (newVol < 0) newVol = 0; // Clamp volume to 0-1.
@@ -143,8 +143,8 @@ RowLayout {
             // Handles mouse wheel events for volume adjustment.
             onWheel: (wheel) => {
                 if (!parent.audio) return;
-                var change = 0.05; // Default volume change step.
-                if (wheel.angleDelta.y < 0) change = -0.05; // Decrease volume on scroll down.
+                var change = 0.01; // Default volume change step.
+                if (wheel.angleDelta.y < 0) change = -0.01; // Decrease volume on scroll down.
                 
                 var newVol = parent.audio.volume + change; // Calculate new volume.
                 if (newVol < 0) newVol = 0; // Clamp volume to 0-1.

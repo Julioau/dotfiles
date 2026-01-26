@@ -5,14 +5,14 @@
   height_cm: 19.0
   x_cm: 29.0
   y_cm: 34.0
-- name: DP-4
+- name: DP-2
   width: 1920
   height: 1080
   width_cm: 60.0
   height_cm: 34.0
   x_cm: 29.0
   y_cm: 0.0
-- name: DP-5
+- name: DP-3
   width: 1080
   height: 1920
   width_cm: 29.0
