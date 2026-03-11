@@ -11,6 +11,7 @@ import "Theme.js" as Theme          // Color scheme.
 import "AudioWidget.qml"            // AudioWidget.
 import "BatteryWidget.qml"          // BatteryWidget.
 import "NetworkWidget.qml"          // NetworkWidget.
+import "WorktimeWidget.qml"         // WorktimeWidget.
 
 Scope { // The root element of this QML file, defining the scope for properties and functions.
     id: root // Identifier for the Scope, allowing other elements to reference it.
@@ -103,12 +104,22 @@ Scope { // The root element of this QML file, defining the scope for properties 
                 objects: [Pipewire.defaultAudioSource] // Tracks the system's default audio input source.
             }
 
+            // Worktime Widget
+            WorktimeWidget {
+                id: worktimeWidget
+                anchors.left: parent.left
+                anchors.top: parent.top
+                globalFont: window.globalFont
+                height: 36
+            }
+
             // Clock Widget
             Rectangle {
                 id: clockContainer // Identifier for the clock's background container.
                 
-                // Anchors the clock container to the left and top of its parent.
-                anchors.left: parent.left
+                // Anchors the clock container to the right of worktime and top of its parent.
+                anchors.left: worktimeWidget.right
+                anchors.leftMargin: 5
                 anchors.top: parent.top
                 
                 height: 36 // Fixed height for the clock container.

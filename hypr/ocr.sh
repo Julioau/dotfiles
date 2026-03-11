@@ -35,7 +35,6 @@ if [ "$width" -lt "$RESIZE_THRESHOLD" ]; then
 fi
 
 # 6. Run the full pipeline.
-# FIX #2: Use `magick` for modern ImageMagick v7+ instead of the deprecated `convert`.
 grim -g "$geometry" - | \
 magick png:- -colorspace gray -normalize "${resize_opts[@]}" png:- | \
 tesseract stdin stdout -l "$LANG" --psm 6 2>/dev/null | \
