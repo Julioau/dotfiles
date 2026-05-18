@@ -1,68 +1,53 @@
 -- LAN Gaming Layout for Hyprland 0.55+
 -- All windows have identical dimensions in a grid.
 -- Bottom row centered if incomplete.
--- Options: fixed_ratio (float)
 
 hl.layout.register("lan", {
     recalculate = function(ctx)
         local n = #ctx.targets
-        if n == 0 then return end
-
+        if n == 0 or not ctx.area then return end
+        
         local area = ctx.area
+        local aw = area.width or area.w or 0
+        local ah = area.height or area.h or 0
+        local ax = area.x or 0
+        local ay = area.y or 0
+
+        if aw == 0 or ah == 0 then return end
+        
         local gaps_in = hl.get_config("general.gaps_in")
-        -- In Hyprland, the gap between two windows is gaps_in * 2
-        local m = (gaps_in.top or 0) * 2
-
-        -- Check for layout options
-        local fixed_ratio = 0
-        if ctx.layout_opts and ctx.layout_opts.fixed_ratio then
-            fixed_ratio = tonumber(ctx.layout_opts.fixed_ratio) or 0
+        local gi = 0
+        if type(gaps_in) == "table" then
+            gi = gaps_in.top or 0
+        elseif type(gaps_in) == "number" then
+            gi = gaps_in
         end
+        local m = gi * 2
 
+        -- Optimization for squareness
         local best_rows = 1
-        local best_cols = n
-        local best_w = 0
-        local best_h = 0
-        local best_penalty = math.huge
-        local best_area = -1
-
-        for rows = 1, n do
-            local cols = math.ceil(n / rows)
+        local best_penalty = 1e18
+        
+        for r = 1, n do
+            local c = math.ceil(n / r)
+            local w_cand = (aw - (c - 1) * m) / c
+            local h_cand = (ah - (r - 1) * m) / r
             
-            -- avail space subtracting gaps between items
-            local avail_w = area.width - (cols - 1) * m
-            local avail_h = area.height - (rows - 1) * m
-
-            local w, h
-            if fixed_ratio > 0 then
-                h = math.min(avail_w / (cols * fixed_ratio), avail_h / rows)
-                w = h * fixed_ratio
-                local current_area = w * h
-                if current_area > best_area then
-                    best_area = current_area
-                    best_rows = rows
-                    best_cols = cols
-                    best_w = w
-                    best_h = h
-                end
-            else
-                w = avail_w / cols
-                h = avail_h / rows
-                local penalty = math.max(w / h, h / w)
+            if w_cand > 0 and h_cand > 0 then
+                local penalty = math.max(w_cand / h_cand, h_cand / w_cand)
                 if penalty < best_penalty then
                     best_penalty = penalty
-                    best_rows = rows
-                    best_cols = cols
-                    best_w = w
-                    best_h = h
+                    best_rows = r
                 end
             end
         end
-
+        
         local rows = best_rows
-        local cols = best_cols
-        local w = best_w
-        local h = best_h
+        local cols = math.ceil(n / rows)
+        
+        -- Final cell dimensions
+        local w = math.floor((aw - (cols - 1) * m) / cols)
+        local h = math.floor((ah - (rows - 1) * m) / rows)
 
         -- Placement logic
         for i, target in ipairs(ctx.targets) do
@@ -77,17 +62,14 @@ hl.layout.register("lan", {
 
             if items_in_this_row < cols then
                 local used_width = (items_in_this_row * w) + ((items_in_this_row - 1) * m)
-                x_offset = (area.width - used_width) / 2
+                x_offset = math.floor((aw - used_width) / 2)
             end
 
-            local x = area.x + x_offset + (c_idx * (w + m))
-            local y = area.y + (r_idx * (h + m))
-
             target:place({
-                x = x,
-                y = y,
-                width = w,
-                height = h
+                x = ax + x_offset + (c_idx * (w + m)),
+                y = ay + (r_idx * (h + m)),
+                w = w,
+                h = h
             })
         end
     end,

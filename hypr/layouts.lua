@@ -39,7 +39,7 @@ hl.config({
     },
 })
 
-local layouts = { "dwindle", "master", "scrolling", "monocle" }
+local layouts = { "dwindle", "master", "scrolling", "monocle", "lua:lan" }
 local orientations = { "left", "top", "right", "bottom", "center" }
 
 -- Initialize state
