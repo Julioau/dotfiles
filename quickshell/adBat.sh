@@ -38,9 +38,9 @@ CMD="quickshell ipc --pid $QS_PID call bar setPhoneConnected"
 
 if [ "$STATUS" == "connected" ]; then
     # Run the command as the specific user
-    /usr/bin/sudo -u $TARGET_USER $CMD true
+    /usr/bin/sudo -u $TARGET_USER XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR" $CMD true
 elif [ "$STATUS" == "disconnected" ]; then
-    /usr/bin/sudo -u $TARGET_USER $CMD false
+    /usr/bin/sudo -u $TARGET_USER XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR" $CMD false
 else
     echo "Usage: $0 [connected|disconnected]"
     exit 1

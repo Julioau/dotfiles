@@ -11,6 +11,10 @@ RowLayout {
     id: root // Identifier for the root element.
     // Exposes a property to receive the global font from the parent.
     property string globalFont: "SpaceMono Nerd Font Propo"
+    property bool debug: false
+    property color widgetColor: Theme.background
+    property color textColor: widgetColor === Theme.background ? Theme.text : Theme.background
+
     // Property to signal if the parent window is visible, to control process running.
     property bool windowVisible: false
     // Property to signal if the phone is connected (set by parent via IPC).
@@ -35,12 +39,12 @@ RowLayout {
         running: false // Controlled manually by timer and IPC
         
         // Debug logging for process start
-        onRunningChanged: if (running) console.log("ADB Process Started")
+        onRunningChanged: if (running && root.debug) console.log("ADB Process Started")
 
         stdout: StdioCollector {
             onStreamFinished: {
                 // Debug raw output (first 50 chars to avoid spam)
-                // console.log("ADB Output received: " + text.substring(0, 50) + "...")
+                if (root.debug) console.log("ADB Output received: " + text.substring(0, 50) + "...")
 
                 // Split the output into individual lines for line-by-line processing.
                 var lines = text.split("\n");
@@ -56,19 +60,19 @@ RowLayout {
                         
                         // If it's a valid number, update the property.
                         if (!isNaN(val)) {
-                            console.log("ADB Battery Level Found: " + val);
+                            if (root.debug) console.log("ADB Battery Level Found: " + val);
                             root.phoneBatLevel = val;
                             foundLevel = true;
                             break; // Stop looking after finding the level.
                         } else {
-                            console.log("ADB Parse Error: level is NaN");
+                            if (root.debug) console.log("ADB Parse Error: level is NaN");
                         }
                     }
                 }
                 
                 // If "level:" wasn't found (e.g. adb error or wrong output), reset to -1.
                 if (!foundLevel) {
-                    console.log("ADB Level not found in output.");
+                    if (root.debug) console.log("ADB Level not found in output.");
                     root.phoneBatLevel = -1;
                 }
             }
@@ -76,7 +80,7 @@ RowLayout {
         
         stderr: StdioCollector {
             onStreamFinished: {
-                if (text.length > 0) console.log("ADB Error: " + text);
+                if (text.length > 0 && root.debug) console.log("ADB Error: " + text);
             }
         }
     }
@@ -108,7 +112,7 @@ RowLayout {
     // 3. Phone Battery (Dynamic) Widget: Displays the phone's battery level.
     Rectangle {
         visible: root.phoneBatLevel >= 0 // Only visible if a valid battery level is available.
-        color: Theme.background // Background color.
+        color: widgetColor // Background color.
         radius: 10 // Rounded corners.
         Layout.fillHeight: true // Fills available height.
         Layout.preferredWidth: phoneText.implicitWidth + 20 // Width based on text content + padding.
@@ -116,7 +120,7 @@ RowLayout {
         Text {
             id: phoneText // Identifier for the phone battery Text element.
             anchors.centerIn: parent // Centers text within its parent.
-            color: Theme.text // Text color.
+            color: textColor // Text color.
             font.family: root.globalFont // Uses global font.
             text: " " + root.phoneBatLevel + "%" // Displays phone icon and battery percentage.
         }
@@ -145,7 +149,7 @@ RowLayout {
         }
         
         Rectangle { // Delegate for each extra UPower device.
-            color: Theme.background // Background color.
+            color: widgetColor // Background color.
             radius: 10 // Rounded corners.
             Layout.fillHeight: true // Fills available height.
             Layout.preferredWidth: extraBatText.implicitWidth + 20 // Width based on text content + padding.
@@ -153,7 +157,7 @@ RowLayout {
             Text {
                 id: extraBatText // Identifier for the extra battery Text element.
                 anchors.centerIn: parent // Centers text within its parent.
-                color: Theme.text // Text color.
+                color: textColor // Text color.
                 font.family: root.globalFont // Uses global font.
                 text: { // Dynamically generated text with icon and percentage.
                     var icon = ""; // Default generic device icon.
@@ -171,7 +175,7 @@ RowLayout {
 
     // 5. Main Battery Indicator: Displays status of the primary laptop battery.
     Rectangle {
-        color: Theme.background // Background color.
+        color: widgetColor // Background color.
         radius: 10 // Rounded corners.
         Layout.fillHeight: true // Fills available height.
         Layout.preferredWidth: batText.implicitWidth + 20 // Width based on text content + padding.
@@ -184,10 +188,10 @@ RowLayout {
             font.family: root.globalFont // Uses global font.
             color: { // Text color changes based on battery level and state.
                 var bat = root.mainBattery;
-                if (!bat) return Theme.text; // Default white if no battery.
+                if (!bat) return textColor; // Default if no battery.
                 var p = bat.percentage * 100; // Get percentage.
                 if (p < 20 && bat.state !== 1) return Theme.red; // Red if low and not charging.
-                return Theme.text; // White otherwise.
+                return textColor; // Default otherwise.
             }
             text: { // Dynamically generated text with icon and percentage.
                 var bat = root.mainBattery;
