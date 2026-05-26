@@ -3,7 +3,7 @@ import QtQuick.Layouts // Provides layout managers like RowLayout.
 import Quickshell // Quickshell core utilities.
 import Quickshell.Hyprland // Hyprland-specific integrations for Quickshell.
 import Quickshell.Widgets // Custom Quickshell widgets, such as IconImage.
-import "Theme.js" as Theme // Import the custom Theme JS library.
+import qs // Import the custom Theme Singleton.
 
 RowLayout { // The root element, arranges items horizontally.
     id: root // Identifier for the RowLayout, allowing other elements to reference it.

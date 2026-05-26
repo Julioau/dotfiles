@@ -7,7 +7,7 @@ import Quickshell.Services.UPower   // Services for UPower (battery, power profi
 import QtQuick                      // Core QML types and elements.
 import QtQuick.Layouts              // Provides layout managers like RowLayout.
 import QtQuick.Controls             // Provides UI controls like PopupWindow.
-import "Theme.js" as Theme          // Color scheme.
+import qs                       // Color scheme Singleton.
 import "AudioWidget.qml"            // AudioWidget.
 import "BatteryWidget.qml"          // BatteryWidget.
 import "NetworkWidget.qml"          // NetworkWidget.

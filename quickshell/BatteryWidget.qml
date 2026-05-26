@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
 import Quickshell.Services.UPower
-import "Theme.js" as Theme
+import qs
 
 // BatteryWidget.qml: A component that displays various battery statuses.
 // Includes phone battery (if enabled), extra UPower devices, and the main laptop battery.

@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Networking
-import "Theme.js" as Theme
+import qs
 
 // NetworkWidget.qml: Native implementation using Quickshell.Networking
 Rectangle {

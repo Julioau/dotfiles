@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
 import Quickshell.Services.Pipewire
-import "Theme.js" as Theme
+import qs
 
 // AudioWidget.qml: A component that displays audio output (speaker) and input (microphone) status.
 // It allows controlling volume and mute state, and shows popups with device descriptions on hover.

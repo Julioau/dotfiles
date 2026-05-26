@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Services.SystemTray
-import "Theme.js" as Theme
+import qs
 
 RowLayout {
     id: root
