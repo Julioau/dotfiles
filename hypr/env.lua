@@ -1,0 +1,20 @@
+HOME = os.getenv("HOME")
+
+hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Green-Mocha")
+hl.env("HYPRCURSOR_SIZE", "24")
+hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
+-- nvidia
+hl.env("LIBVA_DRIVER_NAME", "nvidia")
+hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
+hl.env("NVD_BACKEND", "direct")
+--
+hl.env("XDG_DESKTOP_DIR", HOME .. "/desktop")
+hl.env("XDG_DOWNLOAD_DIR", HOME .. "/downloads")
+hl.env("XDG_TEMPLATES_DIR", HOME .. "/templates")
+hl.env("XDG_PUBLICSHARE_DIR", HOME .. "/public")
+hl.env("XDG_DOCUMENTS_DIR", HOME .. "/documents")
+hl.env("XDG_MUSIC_DIR", HOME .. "/music")
+hl.env("XDG_PICTURES_DIR", HOME .. "/pictures")
+hl.env("XDG_VIDEOS_DIR", HOME .. "/videos")
+hl.env("EDITOR", "nvim")
+hl.env("XDG_CONFIG_HOME", HOME .. "/.config")
