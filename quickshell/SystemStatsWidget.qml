@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
-import "Theme.js" as Theme
+import qs
 
 RowLayout {
     spacing: 5

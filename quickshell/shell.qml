@@ -7,7 +7,7 @@ import Quickshell.Services.UPower   // Services for UPower (battery, power profi
 import QtQuick                      // Core QML types and elements.
 import QtQuick.Layouts              // Provides layout managers like RowLayout.
 import QtQuick.Controls             // Provides UI controls like PopupWindow.
-import "Theme.js" as Theme          // Color scheme.
+import qs                       // Color scheme Singleton.
 import "AudioWidget.qml"            // AudioWidget.
 import "BatteryWidget.qml"          // BatteryWidget.
 import "NetworkWidget.qml"          // NetworkWidget.
@@ -152,6 +152,7 @@ Scope { // The root element of this QML file, defining the scope for properties 
                 anchors.leftMargin: 5 // Adds a 5-pixel margin to the left.
                 anchors.top: parent.top 
                 height: clockContainer.height 
+                debug: root.debugMode
             }
 
             // Window Title Widget

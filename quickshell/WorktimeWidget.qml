@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
-import "Theme.js" as Theme
+import qs
 
 Rectangle {
     id: worktimeRect
@@ -25,6 +25,8 @@ Rectangle {
     
     JsonAdapter {
         id: jsonAdapter
+        property string date: ""
+        property double login_time: 0
     }
 
     FileView {
@@ -33,9 +35,8 @@ Rectangle {
         adapter: jsonAdapter
         
         onLoaded: {
-            var data = jsonAdapter.value // Read the JSON directly
-            if (data && data.date === worktimeRect.currentDateStr && data.login_time) {
-                worktimeRect.loginTime = data.login_time;
+            if (jsonAdapter.date === worktimeRect.currentDateStr && jsonAdapter.login_time) {
+                worktimeRect.loginTime = jsonAdapter.login_time;
             } else {
                 // Not found or different date -> start from now today
                 worktimeRect.loginTime = new Date().getTime();
@@ -56,10 +57,8 @@ Rectangle {
     }
 
     function saveState() {
-        jsonAdapter.value = {
-            "date": worktimeRect.currentDateStr,
-            "login_time": worktimeRect.loginTime
-        };
+        jsonAdapter.date = worktimeRect.currentDateStr;
+        jsonAdapter.login_time = worktimeRect.loginTime;
         cacheFile.writeAdapter();
     }
     

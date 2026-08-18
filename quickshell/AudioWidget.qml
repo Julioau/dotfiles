@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
 import Quickshell.Services.Pipewire
-import "Theme.js" as Theme
+import qs
 
 // AudioWidget.qml: A component that displays audio output (speaker) and input (microphone) status.
 // It allows controlling volume and mute state, and shows popups with device descriptions on hover.
@@ -11,6 +11,21 @@ RowLayout {
     property string globalFont: "SpaceMono Nerd Font Propo"
     property color widgetColor: Theme.background
     property color textColor: widgetColor === Theme.background ? Theme.text : Theme.background
+
+    // Configurable icons for Speaker
+    property string iconSpeaker: "󰕾"
+    property string iconSpeakerMuted: "󰝟"
+    property string iconSpeakerLow: "󰕿"
+    property string iconSpeakerMedium: "󰖀"
+    property string iconSpeakerNoAudio: "󰝟 --"
+
+    // Configurable icons for Microphone
+    property string iconMic: "󰍬"
+    property string iconMicMuted: "󰍭"
+    property string iconMicNoAudio: "󰍭 --"
+
+    // Configurable volume step
+    property real volumeStep: 0.01
 
     // 2. Audio Output (Speaker) Widget
     Rectangle {
@@ -32,15 +47,15 @@ RowLayout {
             color: speakerRect.audio && speakerRect.audio.muted ? Theme.text : textColor
             font.family: globalFont // Uses global font.
             text: {
-                if (!parent.audio) return "󰝟 --"; // Display 'no audio' icon if no audio object.
+                if (!parent.audio) return iconSpeakerNoAudio; // Display 'no audio' icon if no audio object.
                 
                 var vol = Math.round(parent.audio.volume * 100); // Get volume percentage.
-                var icon = "󰕾"; // Default speaker icon.
+                var icon = iconSpeaker; // Default speaker icon.
                 
-                if (parent.audio.muted) icon = "󰝟"; // Muted icon.
-                else if (vol <= 0) icon = "󰝟"; // Muted icon for zero volume.
-                else if (vol < 30) icon = "󰕿"; // Low volume icon.
-                else if (vol < 70) icon = "󰖀"; // Medium volume icon.
+                if (parent.audio.muted) icon = iconSpeakerMuted; // Muted icon.
+                else if (vol <= 0) icon = iconSpeakerMuted; // Muted icon for zero volume.
+                else if (vol < 30) icon = iconSpeakerLow; // Low volume icon.
+                else if (vol < 70) icon = iconSpeakerMedium; // Medium volume icon.
                 
                 return icon + " " + vol + "%"; // Returns icon and volume percentage.
             }
@@ -57,8 +72,8 @@ RowLayout {
             // Handles mouse wheel events for volume adjustment.
             onWheel: (wheel) => {
                 if (!parent.audio) return;
-                var change = 0.01; // Default volume change step.
-                if (wheel.angleDelta.y < 0) change = -0.01; // Decrease volume on scroll down.
+                var change = volumeStep; // Default volume change step.
+                if (wheel.angleDelta.y < 0) change = -volumeStep; // Decrease volume on scroll down.
                 
                 var newVol = parent.audio.volume + change; // Calculate new volume.
                 if (newVol < 0) newVol = 0; // Clamp volume to 0-1.
@@ -109,7 +124,8 @@ RowLayout {
         Layout.fillHeight: true // Fills available height.
         Layout.preferredWidth: micText.implicitWidth + 20 // Width based on text content + padding.
         
-        visible: Pipewire.defaultAudioSource != null // Only visible if a default audio source is available.
+        // DEBUGGING: Force visible
+        visible: Pipewire.defaultAudioSource != null && Pipewire.defaultAudioSink != null && Pipewire.defaultAudioSource.id !== Pipewire.defaultAudioSink.id
 
         // Property to hold the audio object of the default source, if available.
         property var audio: Pipewire.defaultAudioSource && Pipewire.defaultAudioSource.audio 
@@ -123,10 +139,10 @@ RowLayout {
             color: micRect.audio && micRect.audio.muted ? Theme.text : textColor
             font.family: globalFont // Uses global font.
             text: {
-                if (!parent.audio) return "󰍭 --"; // Display 'no audio' icon if no audio object.
+                if (!parent.audio) return iconMicNoAudio; // Display 'no audio' icon if no audio object.
                 
                 var vol = Math.round(parent.audio.volume * 100); // Get volume percentage.
-                var icon = parent.audio.muted ? "󰍭" : "󰍬"; // Muted or active mic icon.
+                var icon = parent.audio.muted ? iconMicMuted : iconMic; // Muted or active mic icon.
                 
                 return icon + " " + vol + "%"; // Returns icon and volume percentage.
             }
@@ -143,8 +159,8 @@ RowLayout {
             // Handles mouse wheel events for volume adjustment.
             onWheel: (wheel) => {
                 if (!parent.audio) return;
-                var change = 0.01; // Default volume change step.
-                if (wheel.angleDelta.y < 0) change = -0.01; // Decrease volume on scroll down.
+                var change = volumeStep; // Default volume change step.
+                if (wheel.angleDelta.y < 0) change = -volumeStep; // Decrease volume on scroll down.
                 
                 var newVol = parent.audio.volume + change; // Calculate new volume.
                 if (newVol < 0) newVol = 0; // Clamp volume to 0-1.

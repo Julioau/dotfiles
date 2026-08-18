@@ -3,11 +3,12 @@ import QtQuick.Layouts // Provides layout managers like RowLayout.
 import Quickshell // Quickshell core utilities.
 import Quickshell.Hyprland // Hyprland-specific integrations for Quickshell.
 import Quickshell.Widgets // Custom Quickshell widgets, such as IconImage.
-import "Theme.js" as Theme // Import the custom Theme JS library.
+import qs // Import the custom Theme Singleton.
 
 RowLayout { // The root element, arranges items horizontally.
     id: root // Identifier for the RowLayout, allowing other elements to reference it.
     property int mon_workspaces: 3
+    property bool debug: false
     spacing: 5 // Spacing between items in the RowLayout.
 
         // property 'updating' controls a "burst" update mechanism for smooth animations.
@@ -51,7 +52,7 @@ RowLayout { // The root element, arranges items horizontally.
         if (!clientData) return "";
         var cls = clientData.class || "";
         var apps = DesktopEntries.applications.values;
-
+        
         // Check if an icon exists in the Quickshell icon theme for the class directly.
         if (Quickshell.iconPath(cls, true) !== "") return cls;
 
@@ -59,10 +60,18 @@ RowLayout { // The root element, arranges items horizontally.
         for (var i = 0; i < apps.length; i++) {
             var app = apps[i];
 
-
             // Standard match: The application's startup class matches the client's class.
             if (app.startupClass === cls && app.icon) {
                 return app.icon;
+            }
+            
+            // Loose match for Flatpaks/Java apps where WMClass differs from StartupWMClass
+            // e.g. cls: "com.stremio.stremio", startupClass: "stremio"
+            if (app.startupClass && cls.toLowerCase().endsWith(app.startupClass.toLowerCase()) && app.icon) {
+                 if (root.debug) {
+                     console.log("Workspaces: Found loose match for " + cls + " -> " + app.startupClass + " Icon: " + app.icon);
+                 }
+                 return app.icon;
             }
 
             // Chrome Web App Heuristic:
@@ -74,9 +83,6 @@ RowLayout { // The root element, arranges items horizontally.
 
                 // Check if the Window Title contains the App Name (e.g. "Discord" in "(1) Discord")
                 if (windowTitle.includes(appName)) {
-                    // Special case to prevent "YouTube" from matching "YouTube Music" indiscriminately,
-                    // although usually exact matches or longer matches would be preferred, 
-                    // this simple check is likely sufficient for your list.
                     return app.icon;
                 }
             }
@@ -107,13 +113,61 @@ RowLayout { // The root element, arranges items horizontally.
             visible: !isSpecial // Special workspaces are not shown.
 
             // Dynamic sizing logic: Adjusts the size of the workspace representation.
-            // It tries to make empty workspaces square, and occupied ones match monitor aspect ratio.
+            // It tries to make empty workspaces square, and occupied ones match the true workspace bounds.
                 // Checks if the workspace has no open windows.
                 property bool isEmpty: workspace.toplevels.values.length === 0
                 // Calculates the aspect ratio of the associated monitor, defaults to 16:9.
                 property real monitorRatio: monitor ? (isVertical ? (monitor.height / monitor.width) : (monitor.width / monitor.height)) : (16 / 9)
-                // Sets the target aspect ratio: 1.0 (square) if empty, or monitorRatio if it has windows.
-                property real targetRatio: isEmpty ? 1.0 : monitorRatio
+                
+                // Calculate true workspace bounds (ignoring floating windows)
+                property real minX: {
+                    var mX = monitor ? monitor.x : 0;
+                    if (isEmpty) return mX;
+                    var res = mX;
+                    for (var i = 0; i < workspace.toplevels.values.length; i++) {
+                        var clientData = workspace.toplevels.values[i].lastIpcObject;
+                        if (clientData && !clientData.floating && clientData.at) res = Math.min(res, clientData.at[0]);
+                    }
+                    return res;
+                }
+                property real maxX: {
+                    var monW = monitor ? (isVertical ? monitor.height : monitor.width) : 1920;
+                    var monX = monitor ? monitor.x : 0;
+                    if (isEmpty) return monX + monW;
+                    var res = monX + monW;
+                    for (var i = 0; i < workspace.toplevels.values.length; i++) {
+                        var clientData = workspace.toplevels.values[i].lastIpcObject;
+                        if (clientData && !clientData.floating && clientData.at && clientData.size) res = Math.max(res, clientData.at[0] + clientData.size[0]);
+                    }
+                    return res;
+                }
+                property real minY: {
+                    var mY = monitor ? monitor.y : 0;
+                    if (isEmpty) return mY;
+                    var res = mY;
+                    for (var i = 0; i < workspace.toplevels.values.length; i++) {
+                        var clientData = workspace.toplevels.values[i].lastIpcObject;
+                        if (clientData && !clientData.floating && clientData.at) res = Math.min(res, clientData.at[1]);
+                    }
+                    return res;
+                }
+                property real maxY: {
+                    var monH = monitor ? (isVertical ? monitor.width : monitor.height) : 1080;
+                    var monY = monitor ? monitor.y : 0;
+                    if (isEmpty) return monY + monH;
+                    var res = monY + monH;
+                    for (var i = 0; i < workspace.toplevels.values.length; i++) {
+                        var clientData = workspace.toplevels.values[i].lastIpcObject;
+                        if (clientData && !clientData.floating && clientData.at && clientData.size) res = Math.max(res, clientData.at[1] + clientData.size[1]);
+                    }
+                    return res;
+                }
+                property real totalWidth: Math.max(1, maxX - minX)
+                property real totalHeight: Math.max(1, maxY - minY)
+                property real boundsRatio: totalWidth / totalHeight
+
+                // Sets the target aspect ratio: 1.0 (square) if empty, or boundsRatio if it has windows.
+                property real targetRatio: isEmpty ? 1.0 : boundsRatio
                 
                 property real currentRatio: targetRatio // The actual ratio being used, can be animated.
                 // Animates changes to 'currentRatio' for a smooth visual transition.
@@ -125,10 +179,39 @@ RowLayout { // The root element, arranges items horizontally.
             radius: 10 // Rounded corners for the workspace rectangle.
             // Background color changes based on whether the workspace is active.
             color: workspace.active ? Theme.surface1 : Theme.surface0 // Surface1 if active, Surface0 otherwise.
-            border.width: 2 // Border width for the workspace rectangle.
-                // Border color changes based on urgency, hover state, or active state.
-                property bool isFocused: wsMouse.containsMouse || (Hyprland.focusedMonitor && Hyprland.focusedMonitor.activeWorkspace.id === workspace.id)
-            border.color: workspace.urgent ? Theme.red : (isFocused ? Theme.green : (workspace.active ? Theme.blue : Theme.transparent))
+            border.width: 2 // We keep border width to reserve space, but make it transparent.
+            border.color: Theme.transparent
+                
+            property bool isFocused: wsMouse.containsMouse || (Hyprland.focusedMonitor && Hyprland.focusedMonitor.activeWorkspace.id === workspace.id)
+                
+            // Viewport Indicator
+            Rectangle {
+                z: 1000 // Ensure it renders above windows
+                property real monW: monitor ? (isVertical ? monitor.height : monitor.width) : 1920
+                property real monH: monitor ? (isVertical ? monitor.width : monitor.height) : 1080
+                property real monX: monitor ? monitor.x : 0
+                property real monY: monitor ? monitor.y : 0
+                
+                // Calculate the target layout dimensions to avoid animation chasing during parent resize
+                property real targetInnerDelegateWidth: (workspaceDelegate.height * workspaceDelegate.targetRatio) - (2 * workspaceDelegate.border.width)
+                property real targetInnerDelegateHeight: workspaceDelegate.height - (2 * workspaceDelegate.border.width)
+                
+                x: workspaceDelegate.border.width + ((monX - workspaceDelegate.minX) / workspaceDelegate.totalWidth) * targetInnerDelegateWidth
+                y: workspaceDelegate.border.width + ((monY - workspaceDelegate.minY) / workspaceDelegate.totalHeight) * targetInnerDelegateHeight
+                width: (monW / workspaceDelegate.totalWidth) * targetInnerDelegateWidth
+                height: (monH / workspaceDelegate.totalHeight) * targetInnerDelegateHeight
+                
+                color: "transparent"
+                border.width: 2
+                border.color: workspaceDelegate.workspace.urgent ? Theme.red : (workspaceDelegate.isFocused ? Theme.green : (workspaceDelegate.workspace.active ? Theme.blue : Theme.transparent))
+                radius: 10
+
+                // Smooth transition for Viewport Indicator
+                Behavior on x { NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
+                Behavior on y { NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
+                Behavior on width { NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
+                Behavior on height { NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
+            }
                 
                 MouseArea { // Allows interaction (clicking, hovering) with the workspace representation.
                 id: wsMouse // Identifier for the MouseArea.
@@ -161,27 +244,25 @@ RowLayout { // The root element, arranges items horizontally.
                         property real w: clientData && clientData.size ? clientData.size[0] : 0
                         property real h: clientData && clientData.size ? clientData.size[1] : 0
 
-                        // Monitor's own position and size to convert global coordinates to relative.
-                        property real monX: mon ? mon.x : 0
-                        property real monY: mon ? mon.y : 0
-                        property real monW: mon ? (workspaceDelegate.isVertical ? mon.height : mon.width) : 1920 // Default width if monitor is null.
-                        property real monH: mon ? (workspaceDelegate.isVertical ? mon.width : mon.height) : 1080 // Default height if monitor is null.
+                        // Use true workspace bounds from workspaceDelegate instead of monitor.
+                        property real totalW: workspaceDelegate.totalWidth
+                        property real totalH: workspaceDelegate.totalHeight
 
-                        // Calculate window position relative to the monitor's top-left corner.
-                        property real relX: globalX - monX
-                        property real relY: globalY - monY
+                        // Calculate window position relative to the workspace's top-left corner.
+                        property real relX: globalX - workspaceDelegate.minX
+                        property real relY: globalY - workspaceDelegate.minY
 
-                        // Define the drawable area within the workspace delegate, accounting for borders.
-                        property real innerDelegateWidth: workspaceDelegate.width - (2 * workspaceDelegate.border.width)
-                        property real innerDelegateHeight: workspaceDelegate.height - (2 * workspaceDelegate.border.width)
+                        // Calculate the target layout dimensions to avoid animation chasing during parent resize
+                        property real targetInnerDelegateWidth: (workspaceDelegate.height * workspaceDelegate.targetRatio) - (2 * workspaceDelegate.border.width)
+                        property real targetInnerDelegateHeight: workspaceDelegate.height - (2 * workspaceDelegate.border.width)
                         property real winGap: 1 // Defines a small gap between windows within the delegate.
 
                         // Calculate target X, Y, Width, Height for the scaled window rectangle,
                         // adjusted for delegate borders and window gaps.
-                        property real targetX: Math.round((workspaceDelegate.border.width) + ((relX / monW) * innerDelegateWidth) + winGap)
-                        property real targetY: Math.round((workspaceDelegate.border.width) + ((relY / monH) * innerDelegateHeight) + winGap)
-                        property real targetW: Math.round(((w / monW) * innerDelegateWidth) - (2 * winGap))
-                        property real targetH: Math.round(((h / monH) * innerDelegateHeight) - (2 * winGap))
+                        property real targetX: Math.round((workspaceDelegate.border.width) + ((relX / totalW) * targetInnerDelegateWidth) + winGap)
+                        property real targetY: Math.round((workspaceDelegate.border.width) + ((relY / totalH) * targetInnerDelegateHeight) + winGap)
+                        property real targetW: Math.round(((w / totalW) * targetInnerDelegateWidth) - (2 * winGap))
+                        property real targetH: Math.round(((h / totalH) * targetInnerDelegateHeight) - (2 * winGap))
 
                     x: targetX // Set the X position of the window rectangle.
                     y: targetY // Set the Y position of the window rectangle.
@@ -193,6 +274,17 @@ RowLayout { // The root element, arranges items horizontally.
                         Behavior on y { enabled: ready; NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
                         Behavior on width { enabled: ready; NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
                         Behavior on height { enabled: ready; NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                if (clientData && clientData.address) {
+                                    var addr = clientData.address;
+                                    if (!addr.startsWith("0x")) addr = "0x" + addr;
+                                    Hyprland.dispatch("hl.dsp.focus({ window = 'address:" + addr + "' })");
+                                }
+                            }
+                        }
 
                         transformOrigin: Item.Center
                         scale: 0
@@ -206,8 +298,15 @@ RowLayout { // The root element, arranges items horizontally.
                             running: true
                         }
 
-                    // Z-order: Active windows appear on top of inactive ones.
-                    z: client.active ? 100 : 0
+                    // Z-order: Tiled back, floating front, recently focused floating on top
+                    z: {
+                        if (client.active) return 1000;
+                        var isFloating = clientData ? clientData.floating : false;
+                        var baseZ = isFloating ? 100 : 0;
+                        var focusHistory = (clientData && clientData.focusHistoryID !== undefined) ? clientData.focusHistoryID : 99;
+                        var focusOffset = Math.max(0, 50 - focusHistory);
+                        return baseZ + focusOffset;
+                    }
 
                     // Visibility: Hide the window rectangle if the client data indicates it's hidden (e.g., inactive tab).
                     visible: clientData ? !clientData.hidden : true

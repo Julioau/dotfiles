@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Services.SystemTray
-import "Theme.js" as Theme
+import qs
 
 RowLayout {
     id: root
@@ -43,7 +43,7 @@ RowLayout {
             radius: 10
 
             Component.onCompleted: {
-                if (root.debug) console.log("SystemTray: Added item " + item.id + " (Title: " + item.title + ")");
+                if (root.debug) console.log("SystemTray: Added item " + item.id + " (Title: " + item.title + ") Icon: " + item.icon);
             }
             Component.onDestruction: {
                 if (root.debug) console.log("SystemTray: Removed item " + item.id);
